@@ -1,1 +1,2 @@
-This is created for a web development class . Where students will upload thier task and teachers will upload the pratical they made in class. 
+I made this repository for a web development course.
+where teachers can share their practical work completed in class and students can upload their assignments. 
