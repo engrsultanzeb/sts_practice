@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Window A</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js">
+</script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js">
+</script>
+  <style>
+  .items {
+    position: relative;
+  }
+  .items > div {
+    margin-right: 5px;
+    width: 150px;
+    height: 150px;
+    padding: 0.5em;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  #log {
+    width: 100%;
+    height: 5em;
+    overflow-y: auto;
+  }
+  [draggable].idle {
+    background-color: rgba(255,0,0,0.75); 
+  }
+  [draggable].selected {
+    background-color: rgba(255,0,0,0.95);
+  }
+  </style>
+</head>
+<body>
+<pre id="log"></pre>
+<div class="items ui-widget">
+  <div id="draggable" class="ui-widget-content idle" draggable="true">
+    <p>Drag me around</p>
+  </div>
+  <div id="static" class="ui-widget-content">
+    <p>I can't be moved</p>
+  </div>
+</div>
+<script>
+
+var srcEl;
+
+function log(s){
+  var now = new Date();
+  var t = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() 
+
++ "." + now.getMilliseconds();
+  var l = document.getElementById("log");
+  l.append(t + ": " + s + "\r\n");
+  l.scrollTop = l.scrollHeight;
+}
+
+function dragStart(e){
+  log("Drag Start: " + e.target.nodeName + "#" + e.target.id);
+  srcEl = e.target;
+  if(e.dataTransfer == undefined){} else {
+    e.dataTransfer.effectAllowed = "copyMove";
+    log("Event dataTransfer.effectAllowed: " + 
+
+e.dataTransfer.effectAllowed);
+    log("Source Element: " + srcEl.nodeName + "#" + srcEl.id);
+  }
+  this.classList.add("selected");
+}
+
+function dragOver(e){
+  e.preventDefault();
+  log("Drag Over: " + e.target.nodeName + (e.target.id != "" ? "#" + 
+
+e.target.id : ""));
+  return false;
+}
+
+function dragLeave(e){
+  log("Drag Leave: " + e.target.nodeName + (e.target.id != "" ? "#" + 
+
+e.target.id : ""));
+}
+
+function dragStop(e){
+  log("Drag End: " + e.target.nodeName + "#" + e.target.id);
+  this.classList.remove("selected");
+}
+
+log("Init");
+
+var item = document.getElementById("draggable");
+item.addEventListener('dragstart', dragStart, false);
+item.addEventListener('dragover', dragOver, false);
+item.addEventListener('dragleave', dragLeave, false);
+window.addEventListener('dragleave', dragLeave, false);
+var items = document.querySelectorAll('.items > div');
+[].forEach.call(items, function(el) {
+  el.addEventListener('dragover', dragOver, false);
+});
+</script>
+</body>
+</html>
